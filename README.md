@@ -12,7 +12,7 @@ Nova 프레임워크는 라라벨을 참고하여 개발된 PHP 프레임워크�
   - [설치](nova/install.md)
   - [설정](nova/config.md)
   - [디렉토리 구조](nova/directory.md)
-- 세부 사항
+- 기본 사항
   - [Lifecycle](nova/lifecycle.md)
   - [라우팅](nova/route.md)
   - [컨트롤러](nova/controller.md)
@@ -28,3 +28,5 @@ Nova 프레임워크는 라라벨을 참고하여 개발된 PHP 프레임워크�
   - [서비스](nova/service.md)
   - [디버깅](nova/debug.md)
   - [로그](nova/logging.md)
+- 고급 사항
+  - [DB 마이그레이션](nova/migration.md)

@@ -2,7 +2,7 @@
 
 ## 템플릿이란?
 
-- 프로그램과 디자인을 분리하여 동적데이타 처리를 위한 간결한 인터페이스를 제공합니다.
+- 프로그램과 디자인을 분리하여 동적데이터 처리를 위한 간결한 인터페이스를 제공합니다.
 
 ## 템플릿 태그
 
@@ -391,13 +391,13 @@ html 코드와 같이 `escape` 처리하지 말아야 하는 경우는 `{=conten
   ```html
   <h1>예약어 예제</h1>
   
-  <label>1. <input type="checkbox" name="color2" value="red" > 빨강</label>
-  <label>2. <input type="checkbox" name="color2" value="orange" > 주황</label>
-  <label>3. <input type="checkbox" name="color2" value="yellow" > 노랑</label>
-  <label>4. <input type="checkbox" name="color2" value="green" > 초록</label>
-  <label>5. <input type="checkbox" name="color2" value="blue" checked> 파랑</label>
-  <label>6. <input type="checkbox" name="color2" value="darkblue" > 남색</label>
-  <label>7. <input type="checkbox" name="color2" value="purple" > 보라</label>
+  <label>1. <input type="checkbox" name="color" value="red" > 빨강</label>
+  <label>2. <input type="checkbox" name="color" value="orange" > 주황</label>
+  <label>3. <input type="checkbox" name="color" value="yellow" > 노랑</label>
+  <label>4. <input type="checkbox" name="color" value="green" > 초록</label>
+  <label>5. <input type="checkbox" name="color" value="blue" checked> 파랑</label>
+  <label>6. <input type="checkbox" name="color" value="darkblue" > 남색</label>
+  <label>7. <input type="checkbox" name="color" value="purple" > 보라</label>
   ```
 
 ## 분기 - IF
