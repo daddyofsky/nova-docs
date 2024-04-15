@@ -105,4 +105,4 @@ return view('info.view', 'sub')
 
 `{{M_모듈코드}}` 형태로 템플릿 파일에서 사용합니다.
 
-모듈에 대한 로직은 `App\View\ModuleHandler` 클래스에 `module_M_모듈코드` 이름을 가진 메소드가 있는 경우 자동으로 호출됩니다.
+모듈에 대한 로직은 `App\Service\View\ModuleHandler` 클래스에 `module_M_모듈코드` 이름을 가진 메소드가 있는 경우 자동으로 호출됩니다.

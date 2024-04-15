@@ -58,8 +58,8 @@ public function orWhere(string|array ...$wheres): static
 - **데이터는 자동으로 `escape` 처리된다.**
 - 여러 조건을 전달하는 경우 배열을 사용한다.
 
-`참고사항` 여러 조건들은 기본적으로 `AND`로 묶인다. (`OR`를 사용하는 방법은 [? 사용](#where_question) 또는 [orWhere() 사용](#where_or_whre) 부분을 참고)  
-`주의사항` _기존에 문자열로 조건문을 조합하여 전달하는 방법은 사용을 하지 않도록 한다. 이 경우 escape 처리를 별도로 해주어야 하고,
+`참고` 여러 조건들은 기본적으로 `AND`로 묶인다. (`OR`를 사용하는 방법은 [? 사용](#where_question) 또는 [orWhere() 사용](#where_or_whre) 부분을 참고)  
+`주의` _기존에 문자열로 조건문을 조합하여 전달하는 방법은 사용을 하지 않도록 한다. 이 경우 escape 처리를 별도로 해주어야 하고,
 문자열을 조합하는 과정에서 코드가 번잡해지는 경우가 많기 때문이다._
 
 ```php
@@ -105,7 +105,7 @@ $db->where('user_id', '=', null); // 무시됨
 <a id="where_in"></a>
 ### IN, NOT IN
 - 문자열이 아닌 배열 데이터를 직접 지정하여 사용한다.
-- `주의사항` _,(콤마) 및 따옴표를 사용하여 문자열로 조합하여 전달하지 않도록 한다._
+- `주의` _,(콤마) 및 따옴표를 사용하여 문자열로 조합하여 전달하지 않도록 한다._
 
 ```php
 // IN (생략 가능), NOT IN
@@ -123,7 +123,7 @@ $db->where('title', 'LIKE', $ss); // - -> title LIKE '%$ss%' ($ss 값이 없는 
 $db->where('title', 'NOT LIKE', $ss . '%'); // - -> title LIKE '$ss%'
 $db->where('cate', 'LIKE', $cate_code . '__'); // - -> title LIKE '$cate_code__'
 ```
-`참고사항` 데이터가 없는 경우 해당 where 구문은 무시된다.
+`참고` 데이터가 없는 경우 해당 where 구문은 무시된다.
 
 <a id="where_between"></a>
 ### BETWEEN, >, <, >=, <=
@@ -139,13 +139,13 @@ $db->where('buy_status', '<=', 0, '>', 10); // - -> buy_status <= 0 OR buy_statu
 $db->where('date', '>=', '', '<=', '2024- 01- 01'); // - -> date <= '2024- 01- 01' (데이터가 없는 부분은 무시됨)
 ```
 
-`참고사항` 데이터가 없는 부분은 무시된다.
+`참고` 데이터가 없는 부분은 무시된다.
 
 <a id="where_sql"></a>
 ### SQL 직접 사용
 - SQL 구문을 직접 사용하는 경우 raw: 텍스트로 시작한다. (소문자로만 입력)
 
-`주의사항` 불가피한 경우를 제외하고 사용하지 않도록 한다.
+`주의` 불가피한 경우를 제외하고 사용하지 않도록 한다.
 
 ```php
 // raw where
@@ -158,7 +158,7 @@ $db->where('LEFT(created_at, 10)', $today);
 ### ? 사용
 - `OR`, `괄호` 등이 포함된 복잡한 조건을 지정할 때 사용한다.
 - 조건문과 데이터는 분리해서 전달하고, ? 갯수와 데이터의 갯수가 같아야만 한다.
-- `참고사항` 이 경우도 배열 데이터를 직접 사용할 수 있다.
+- `참고` 이 경우도 배열 데이터를 직접 사용할 수 있다.
 
 ```php
 // raw where + ?
@@ -246,27 +246,33 @@ if ($total) {
 }
 ```
 
-### JOIN, WHERE, COLUMN, ORDER, GROUP, LIMIT
-`join()` `where()` `column()` `orderBy()` `groupBy()` `limit()` `page()` 메소드를 사용하여 쿼리 세부 내용을 지정할 수 있다.
-
 <a id="select_join"></a>
-#### JOIN
+### JOIN
 - `join()` 메소드를 사용하여 테이블을 조인할 수 있다.
+- 조인 테이블의 칼럼은 `join()` 메소드에 인수로 전달하는 것을 권장합니다.
+- `INNER` 조인이 아닌 경우 WHERE 조건에 JOIN 테이블에 있는 경우에 한하여 적용됩니다.
 
 ```php
 public function join(string|array $table, string $joinType = '', string|array $on = '', string $column = ''): static
 ```
 
 ```php
+$db->table('user');
 $db->join('user_level L', 'LEFT', 'U.user_level = L.user_level', 'L.user_level_name');
+$total = $db->findCount();
+$db->limit(10);
+$db->page(1);
+$data = $db->findAll();
 ```
 
+- 위 예제의 경우 `findCount()` 호출 시 WHERE 조건에 user_level 테이블 조건이 없으므로 조인이 적용되지 않고, `findAll()` 호출시에만 조인이 적용됩니다.
+
 <a id="select_where"></a>
-#### WHERE 조건
+### WHERE 조건
 위쪽 [WHERE 조건](#where) 참조
 
 <a id="select_column"></a>
-#### COLUMN
+### COLUMN
 - `column()` 메소드를 사용하여 조회할 칼럼을 지정할 수 있다.
 - 여러번 호출하여 필요한 칼럼을 계속 추가할 수 있다.
 
@@ -282,9 +288,9 @@ if ($join_level) {
 ```
 
 <a id="select_order"></a>
-#### ORDER
+### ORDER
 - `orderBy()` 메소드를 사용하여 ORDER BY 쿼리를 지정할 수 있다.
-- `주의사항` 여러번 호출하는 경우 마지막 값만 적용된다.
+- `주의` 여러번 호출하는 경우 마지막 값만 적용된다.
 
 ```php
 public function orderBy(string|array $order): static
@@ -295,9 +301,9 @@ $db->orderBy('main_index ASC, sub_index ASC');
 ```
 
 <a id="select_group"></a>
-#### GROUP
+### GROUP
 - `groupBy()` 메소드를 사용하여 GROUP BY 쿼리를 지정할 수 있다.
-- `주의사항` 여러번 호출하는 경우 마지막 값만 적용된다.
+- `주의` 여러번 호출하는 경우 마지막 값만 적용된다.
 
 ```php
 public function groupBy(string|array $group): static
@@ -309,7 +315,7 @@ $db->groupBy('user_id, user_level');
 ```
 
 <a id="select_limit"></a>
-#### LIMIT
+### LIMIT
 - `limit()` `page()` 메소드를 사용하여 LIMIT 쿼리를 지정할 수 있다.
 - `limit()` 메소드에서 offset을 지정할 수 있지만, offset을 따로 계산할 필요가 없고 페이지를 기준으로 조회하는 경우가 대부분이므로 `page()` 메소드 사용을 권장한다.
 
@@ -437,7 +443,7 @@ function format(&$data, $i)
 }  
 ```
 
-`참고사항` 문자열 자르기, 날짜 형식 변환 등은 템플릿에서 `함수 호출`을 사용할 것을 권장한다. 
+`참고` 문자열 자르기, 날짜 형식 변환 등은 템플릿에서 `함수 호출`을 사용할 것을 권장한다. 
 
 ```html
 {title|40}
@@ -546,7 +552,7 @@ $db->insertBulk();
 - `update()` 메소드를 사용하여 지정한 Uniue ID의 데이터를 수정할 수 있다.
 - 일반 WHERE 조건을 사용할 수도 있는데 이 경우에는 세번째 인수를 `true`로 전달해주어야 한다.
 - 데이터는 `insert()` 메소드와 동일하게 배열을 사용한다.
-- `참고사항` 조회 조건이 없는 경우는 쿼리를 실행하지 않고 `false`를 반환한다.
+- `참고` 조회 조건이 없는 경우는 쿼리를 실행하지 않고 `false`를 반환한다.
 
 ```php
 public function update(array|ArrayObject $data, true|string|array $where = self::AUTO_WHERE, string|array $order = '', int $limit = 0): bool
@@ -593,7 +599,7 @@ $db->update($data, $id);
 
 - `delete()` 메소드를 사용하여 지정한 Uniue ID의 데이터를 삭제할 수 있다.
 - 일반 WHERE 조건을 사용할 수도 있는데 이 경우에는 두번째 인수를 `true`로 전달해주어야 한다.
-- `참고사항` 조회 조건이 없는 경우는 쿼리를 실행하지 않고 `false`를 반환한다.
+- `참고` 조회 조건이 없는 경우는 쿼리를 실행하지 않고 `false`를 반환한다.
 
 ```php
 public function delete(true|string|array $where = self::AUTO_WHERE, string|array $order = '', int $limit = 0): bool
@@ -614,7 +620,7 @@ $db->delete();
 
 <a id="rawsql"></a>
 ## RAW SQL 실행
-- `주의사항` RAW SQL 실행은 사용하지 않는 것을 원칙으로 한다. DB 클래스가 기능을 지원하지 않는 경우에 한해서만 사용하도록 한다.
+- `주의` RAW SQL 실행은 사용하지 않는 것을 원칙으로 한다. DB 클래스가 기능을 지원하지 않는 경우에 한해서만 사용하도록 한다.
 - SQL 및 파라미터 지정은 `PDO`의 방법에 준한다.
 
 ```php

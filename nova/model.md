@@ -29,6 +29,8 @@ php console make:model front/post
 
 ## 데이터베이스 작업
 
+`참고` 디비 쿼리에 관한 자세한 사항은 [DB](db.md) 참고
+
 ### 조회
 
 - 단일 데이터 조회 
@@ -41,7 +43,7 @@ php console make:model front/post
 
   이 코드는 id 값이 1인 게시글을 반환합니다.
 
- `참고` `Nova\Model` 객체는 `ArrayObject`를 상속받기 때문에 배열 또는 속성 두가지 방법으로 데이터를 조회 및 수정할 수 있습니다.
+ `참고` `get()` `gets()` `paginate()` 메소드를 통해 조회한 데이터는 `ArrayObject` 상속 객체를 반환하며, 배열 또는 속성 두가지 방법으로 내부 데이터를 조회 및 수정할 수 있습니다.
 
 - 목록 데이터 조회
 
@@ -61,6 +63,7 @@ php console make:model front/post
 
 ### 입력
 
+- `insert()` 사용
   ```php
   use App\Models\Post;
 
@@ -70,8 +73,21 @@ php console make:model front/post
   ];
   Post::insert($data);
   ```
+
+- `save()` 사용
+  ```php
+  use App\Models\Post;
+
+  $post = new Post();
+  $post->title = '제목입니다.';
+  $post->content = '내용입니다.';
+  
+  $id = $post->save();
+  ```
  
 ### 업데이트
+
+- `update()` 사용
 
   ```php
   use App\Models\Post;
@@ -81,29 +97,48 @@ php console make:model front/post
   ];
   Post::update($data, 1);
   ```
-  이 코드는 ID가 1인 게시물의 제목을 업데이트합니다.
+
+- `save()` 사용
+
+  ```php
+  use App\Models\Post;
+
+  $post = new Post(1);
+  $post->title = '제목이 수정되었습니다.';
+  
+  $post->save();
+  ```
 
 ### 삭제
 
   ```php
   Post::delete(1);
   ```
-  이 코드는 ID가 1인 게시물을 삭제합니다.
 
+## 관계
 
+### 관계와 조인
 
-`참고` 디비 쿼리에 관한 자세한 사항은 [DB](db.md) 참고
+- 관계는 검색 조건에 포함되지 않는 단순 연결 데이터를 조회할 때 사용합니다.
+- 검색 조건에 포함되는 경우에는 `join()` 메소드를 사용합니다.
 
+### 관계 관련 주요 메소드
 
-#### 관계
+- **belongsTo** : 1:1 또는 1:N 의 관계에서 자식 테이블이 부모 테이블의 데이터를 조회하는 경우 (예: 게시글의 `user_id` 칼럼 기준으로 `user` 테이블의 데이터 조회)
+- **hasOne** : 1:1 관계에서 부모 테이블에서 자식 테이블의 데이터를 조회하는 경우
+- **hasMany** : 1:N 관계에서 부모 테이블에서 자식 테이블의 데이터를 조회하는 경우 (예: 게시글의 댓글 데이터 조회)
+- **withOne** : 1:1 관계 데이터를 조회하는 경우. (연결 칼럼 및 관계를 직접 지정하는 경우)
+- **withMany** : 1:N 관계 데이터를 조회하는 경우. (연결 칼럼 및 관계를 직접 지정하는 경우)
 
+`참고` 모델 클래스의 `getPrimaryKey()` `getForeignKey()` 메소드를 사용하여 연결 칼럼을 추정합니다.
+예외적인 경우 `withOne()` `withMany()` 메소드를 사용하여 칼럼을 직접 지정하여 사용하시기 바랍니다. 
 
 ```php
-class User extends Model
+class Post extends Model
 {
-    public function posts()
+    public function user()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsTo(User::class);
     }
 }
 ```
@@ -111,6 +146,9 @@ class User extends Model
 이를 통해 사용자의 모든 게시물을 쉽게 조회할 수 있습니다:
 
 ```php
-$user = User::find(1);
-$posts = $user->posts;
+$post = Post::get(1)->user();
+$title = $post->title;
+$user = $post->user;
 ```
+
+`주의` 관계 데이터 조회는 `get()` `gets()` `paginate()` 메소드를 통해 데이터를 조회한 이후에 사용 가능합니다.5
