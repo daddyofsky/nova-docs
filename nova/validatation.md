@@ -82,15 +82,41 @@
 
 ## Validation 규칙
 
-### 주요 규칙
+### required
 
-필드가 비어 있지 않은지 확인합니다.
+필수 필드를 지정합니다. (빈 값이 아니어야 함)
 
 ```php
 public function rules()
 {
     return [
         'name' => 'required',
+    ];
+]
+```
+
+### required_if
+
+특정 필드 값이 있으면 필수인 경우
+
+```php
+public function rules()
+{
+    return [
+        'file' => 'required_if:use_file',
+    ];
+]
+```
+
+### required_if_not
+
+특정 필드 값이 없으면 필수인 경우
+
+```php
+public function rules()
+{
+    return [
+        'nick' => 'required_if_not:name',
     ];
 ]
 ```
@@ -112,15 +138,23 @@ return [
 ];
 ```
 
-### min 및 max
+### min, max, between
 
-값의 최소 및 최대 길이를 확인합니다.
+배열의 갯수, 문자열의 길이, 업로드 파일의 크기, 숫자 값의 최소, 최대 및 범위를 확인합니다.
 
 ```php
 return [
+    'user_id' => 'required|string|between:4,20',
     'password' => 'required|string|min:6|max:20',
 ];
 ```
+`참고` 체크 대상을 명확히 지정하고 싶은 경우는 다음과 같은 rule 을 사용할 수 있습니다. 
+
+- `count` : 배열의 갯수, 체크박스, Select 의 선택 갯수 범위
+- `length` : 문자일의 길이 범위 (한글 등 멀티바이트 문자는 길이가 2 인 것으로 계산합니다.)
+- `byte` : 바이트 범위 (strlen 함수의 결과 값)
+- `size` : 업로드 파일의 크기 범위
+- `range` : 숫자의 값 범위
 
 ### match
 
@@ -154,15 +188,14 @@ return [
 
 ### 범위 체크
 
-- **size** : 숫자, 크기 또는 갯수나 길이를 셀 수 있는 경우의 최대값
 - **min** : 최소값 또는 최소 길이
 - **max** : 최대값 또는 최대 길이
 - **between** : 범위 이내. 최소값 생략 가능
-- **range** : between 과 동일
+- **range** : 숫자값의 범위, 최소값 생략 가능
 - **length** : 문자열 길이 범위, 최소값 생략 가능
 - **byte** : Byte 범위, 최소값 생략 가능
-- **check** : 체크박스 선택 갯수 범위, 최소값 생략 가능
-- **select** : Select 선택 갯수 범위, 최소값 생략 가능
+- **count** : 체크박스, Select 등 갯수 범위, 최소값 생략 가능
+- **size** : 업로드 파일의 크기 범위, 최소값 생략 가능
 - **in** : 지정 항목 목록에 있는지 체크
 - **before** : 값 또는 날짜가 지정 항목의 값보다 작은지 체크
 - **after** : 값 또는 날짜가 지정 항목의 값보다 큰지 체크
@@ -183,8 +216,14 @@ return [
 - **bizno** : 사업자 번호
 - **phone** : 전화 번호
 - **mobile** : 휴대폰 번호
+- **date** : 날짜 형식 (Y-m-d 또는 Y-m-d H:i:s)
 - **regex** : 정규표현식에 맞는지 체크
 - **not_regex** : 정규표현식에 맞지 않는지 체크
 
 ### 기타
+- **default** : 빈 값인 경우 기본값을 지정
+- **hash** : 비밀번호를 암호화
+- **join** : 배열인 경우 문자열로 합침
+- **sum** : 배열인 경우 합계를 구함
 - **match** : 지정 항목의 값과 같은지 체크
+- **apply** : 결과값을 지정 항목에 적용

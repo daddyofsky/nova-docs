@@ -10,7 +10,6 @@
 │   ├── Requests            // 사용자 요청 처리 클래스 디렉토리
 │   ├── Enums               // Enum 역할 클래스 디렉토리
 │   ├── Middleware          // 미들웨어 클래스 디렉토리
-│   ├── Providers           // 서비스 Provider 클래스 디렉토리
 │   ├── Services            // 서비스 클래스 디렉토리
 │   └── Traits              // Trait 클래스 디렉토리
 ├── config                  // 설정 디렉토리
@@ -68,6 +67,5 @@
 - `Requests/`: 사용자 요청 처리 파일이 있는 디렉토리입니다.
 - `Enums/`: Enum 역할 클래스 파일이 있는 디렉토리입니다.
 - `Middleware/`: 미들웨어 파일이 있는 디렉토리입니다.
-- `Providers/`: 서비스 프로바이더 클래스 파일이 있는 디렉토리입니다.
 - `Services/`: 서비스 클래스 파일이 있는 디렉토리입니다.
 - `Traits/`: Trait 클래스 파일이 있는 디렉토리입니다.

@@ -64,6 +64,7 @@ Nova의 `Nova\Http\Request` 클래스는 많은 유용한 메서드를 제공합
 - `request($key, $default = '')`: $_REQUEST 요청 값을 가져옵니다.
 - `cookie($key, $default = '')`: $_COOKIE 요청 값을 가져옵니다.
 
+
 ## 요청 유효성 검사
 
 유효성 검사는 `Nova\Http\FormRequest` 객체를 통하여 수행할 수 있습니다.
@@ -83,3 +84,31 @@ public function store(FormRequest $request)
 직접 에러처리를 하고자 하는 경우에는 `try-catch` 구문을 사용하여 처리하면 됩니다.
 
 유효성 검사의 자세한 사항은 [Validation](validatation.md) 항목을 참고하시기 바랍니다.
+
+
+## HTML Form 및 Javascript 연동
+
+`sky.form.js` 와 연동하여 폼 데이터를 설정하거나 유효성 체크를 동일하게 수행할 수 있습니다.
+
+`참고` `CSRF(Cross-Site Request Forgery)` 체크도 내부적으로 자동으로 처리됩니다.
+
+```php
+public function create(CreateRequest $request): View
+{
+    // default value
+    $data = [
+        'type' => UserType::NORMAL,
+    ];
+
+    return view('user.form')
+        ->with($data)
+        ->withForm($data, $request);
+}
+
+public function edit(User $user, EditRequest $request): View
+{
+    return view('user.form')
+        ->with($user)
+        ->withForm($user, $request);
+}
+```

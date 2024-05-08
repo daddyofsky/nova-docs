@@ -51,6 +51,40 @@ public function index()
 }
 ```
 
+`불린(Boolean)` 데이터를 반환하는 경우 자동으로 다음과 같이 JSON 응답을 클라이언트에 반환됩니다.
+
+```js
+// true
+{
+    success: true,
+    message: 'OK',    
+}
+
+// false
+{
+    success: false, 
+    message: 'ERROR',
+}
+```
+
+Ajax 요청 처리중 에러가 발생하는 경우 다음과 같은 JSON 응답을 클라이언트에 반환합니다.
+
+```php
+error('에러가 발생하였습니다.');
+```
+
+```js
+{
+    error: true,
+    message: "에러가 발생하였습니다."
+}
+```
+`참고` 다음과 같은 경우 Ajax 로 판단합니다. 
+
+  - HTTP 헤더의 `X-Requested-With` 값이 `XmlHttpRequest` 인 경우 (jQuery ajax 사용시 자동으로 추가됨)
+  - 요청 파라미터에 `ajax` 값이 참인 경우 (예: /board/comment?ajax=true)
+  - Request::setAjax(true) 호출하여 강제로 설정한 경우
+
 ## 페이지 이동
 
 - 파라미터를 포함하는 경우 `Default`

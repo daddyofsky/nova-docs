@@ -25,12 +25,6 @@ Nova 프레임워크를 사용하기 위한 기본 시스템 요구 사항은 �
   composer install
   ```
 
-### 초기화
-
-  ```bash
-  init.sh
-  ```
-
 ### 환경 설정
 
 [설정](config.md) 참고

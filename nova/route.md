@@ -78,28 +78,24 @@ Nova 프레임워크에서 라우팅은 클라이언트 요청을 애플리케�
   ```
   이것은 다음과 코드와 같은 효과가 있습니다.
   ```php
-  Route::prefix('/posts')->group(function(...$args) {
-      Route::get('/', [PostController::class, 'index']);
-      Route::get('/create', [PostController::class, 'create']);
-      Route::post('/create', [PostController::class, 'createAct']);
-      Route::post('/', [PostController::class, 'createAct']);
-      Route::get('/{id=\d+}', [PostController::class, 'view']);
-      Route::get('/{id=\d+}/edit', [PostController::class, 'edit']);
-      Route::post('/{id=\d+}/edit', [PostController::class, 'editAct']);
-      Route::put('/{id=\d+}', [PostController::class, 'editAct']);
-      Route::get('/{id=\d+}/delete', [PostController::class, 'delete']);
-      Route::post('/{id=\d+}/delete', [PostController::class, 'deleteAct']);
-      Route::delete('/{id=\d+}', [PostController::class, 'deleteAct']);
+  Route::prefix('/posts')->group(function(...$args) use ($class) {
+      Route::get('/', [$class, 'index']);
+      Route::prefix('/{id_or_mode}')->group(function(...$args) use ($class) {
+          if (!(int)($mode = end($args)) && ($mode = Str::camel($mode))
+              && (method_exists($class, $mode) || method_exists($class, $mode . 'Act'))) {
+              Route::get('/', [$class, $mode]);
+              Route::post('/', [$class, $mode . 'Act']);
+              return;
+          }
 
-      Route::prefix('/{id=\d+}/{mode}')->group(function(...$args) {
-          $mode = last($args);
-          Route::get('/', [PostController::class, $mode]);
-          Route::post('/', [PostController::class, $mode . 'Act']);
-      });
-      Route::prefix('/{mode}')->group(function(...$args) {
-          $mode = last($args);
-          Route::get('/', [PostController::class, $mode]);
-          Route::post('/', [PostController::class, $mode . 'Act']);
+          Route::get('/', [$class, 'view']);
+          Route::prefix('/{mode}')->group(function(...$args) use ($class) {
+              $mode = Str::camel(end($args));
+              Route::get('/', [$class, $mode]);
+              Route::post('/', [$class, $mode . 'Act']);
+          });
+          Route::put('/', [$class, 'editAct']);
+          Route::delete('/', [$class, 'deleteAct']);
       });
   });
   ```

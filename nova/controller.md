@@ -11,11 +11,12 @@ use App\Controllers\Controller;
 use App\Models\Board;
 use App\Models\BoardSetup;
 use App\Requests\Board\ViewRequest;
+use Nova\Http\Redirect;
 use Nova\Http\Request;
 
 class BoardController extends Controller
 {
-    public function index(BoardSetup $setup, Request $request)
+    public function index(BoardSetup $setup, Request $request): View
     {
         $board = Board::where('code', $setup->code)
             ->orderBy()
@@ -27,17 +28,17 @@ class BoardController extends Controller
             ->with('setup', $setup)
             ->with('board', $board);        
     }
-        
-    public function view(BoardSetup $setup, Board $board, ViewRequest $request)
-    {
-        $board->setup($setup)
-            ->iterate();
-        
-        return view('board.view')
-            ->layout($setup->layout)
-            ->with('setup', $setup)
-            ->with($board);
-    }
+
+	public function createAct(BoardSetup $setup, CreateRequest $request): Redirect
+	{
+		$data = $request->validated();
+		$data = $request->format($data, $setup);
+
+		if (Board::insert($data)) {
+		    return redirect('..', 'LANG:게시글이 등록되었습니다.');
+		}
+        error('LANG:게시글 등록에 실패하였습니다.');
+	}
     ...
 }
 ```
