@@ -20,7 +20,7 @@ php console make:migration add_post_table
 예를 들어, 사용자 테이블을 생성하는 마이그레이션은 다음과 같이 작성할 수 있습니다:
 
 ```php
-use Nova\Database\Migration;
+use App\Nova\Database\Migration;
 
 return new class extends Migration
 {

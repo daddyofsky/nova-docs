@@ -8,7 +8,7 @@ HTTP 요청은 클라이언트에서 서버로 전송된 모든 데이터를 포
 ## 사용 예시
 
 ```php
-use Nova\Http\Request;
+use App\Nova\Http\Request;
 
 // 컨트롤러 메서드 내에서 요청 객체 생성
 public function index(Request $request)
@@ -70,7 +70,7 @@ Nova의 `Nova\Http\Request` 클래스는 많은 유용한 메서드를 제공합
 유효성 검사는 `Nova\Http\FormRequest` 객체를 통하여 수행할 수 있습니다.
 
 ```php
-use Nova\Http\FormRequest;
+use App\Nova\Http\FormRequest;
 
 public function store(FormRequest $request)
 {

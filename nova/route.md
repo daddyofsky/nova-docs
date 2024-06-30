@@ -49,26 +49,44 @@ Nova 프레임워크에서 라우팅은 클라이언트 요청을 애플리케�
   ```
   이 라우트는 `/posts/1`, `/posts/2` 등의 요청을 `PostController`의 `view` 메서드로 라우팅하며, `{id}`는 해당 게시물의 ID로 대체됩니다.
 
+
 - **파라미터 필터링**:
 
-- ```php
+  ```php
   Route::get('/posts/{id=\d+}', [PostController::class, 'view']);
   ```
   이 라우트는 정규표현식을 사용하여 id 값이 숫자인 경우로 제한하고 있습니다.
 
+
+- **파라미터 직접 지정**
+
+  필요한 파라미터 값이 URL에 포함되지 않은 경우도 있습니다. 이 경우 직접 파라미터 값을 지정해줄 수 있습니다.
+
+  ```php
+  Route::resource('/board/{code=qna}', PostController::class);
+  Route::resource('/ask', PostController::class, ['code' => 'qna']);
+  ```
+
 ## 라우트 그룹
 
-라우트 그룹은 공통의 접두어를 공유하는 라우트 집합에 대해 사용됩니다.
+- **prefix**: 공통의 접두어를 공유하는 라우트 집합에 대해 사용됩니다. 해당 그룹 내에서 매칭된 라우트를 찾지 못한 경우 404 에러를 출력합니다.
 
-- **라우트 그룹 예제**:
   ```php
-  Route::prefix('/admin')->group(function () {
+  Route::prefix('/admin', function () {
       Route::get('/', [MainController::class, 'index']);
       Route::get('/setup', [SetupController::class, 'index']);
   })->middleware(AdminRegion::class);
   ```
   이 예제에서는 `/admin`와 `/admin/setup` 경로에 대한 요청이 `AdminRegion` 미들웨어를 거치도록 설정됩니다.
 
+- **group**: 여러 라우트를 묶어 동일한 파라미터, 미들웨어 또는 요청값을 적용할 때 사용됩니다.
+
+  ```php
+  Route::group(function() {
+     Route::resource('/mypage', MypageCrontroller::class);
+     Route::resource('/user', [UserCrontroller::class, 'edit']);
+  })->middleware(MemberOnly::class)->with('menu', 'mypage');
+  ```
 
 ## 자동 라우트
 
@@ -78,26 +96,26 @@ Nova 프레임워크에서 라우팅은 클라이언트 요청을 애플리케�
   ```
   이것은 다음과 코드와 같은 효과가 있습니다.
   ```php
-  Route::prefix('/posts')->group(function(...$args) use ($class) {
-      Route::get('/', [$class, 'index']);
-      Route::prefix('/{id_or_mode}')->group(function(...$args) use ($class) {
+  Route::prefix('/posts', static function(...$args) use ($class) {
+      Route::get('/', [$class, 'index'], $args);
+      Route::prefix('/{id_or_mode}', static function(...$args) use ($class) {
           if (!(int)($mode = end($args)) && ($mode = Str::camel($mode))
               && (method_exists($class, $mode) || method_exists($class, $mode . 'Act'))) {
-              Route::get('/', [$class, $mode]);
-              Route::post('/', [$class, $mode . 'Act']);
+              Route::get('/', [$class, $mode], $args);
+              Route::post('/', [$class, $mode . 'Act'], $args);
               return;
           }
 
-          Route::get('/', [$class, 'view']);
-          Route::prefix('/{mode}')->group(function(...$args) use ($class) {
+          Route::get('/', [$class, 'view'], $args);
+          Route::prefix('/{mode}', static function(...$args) use ($class) {
               $mode = Str::camel(end($args));
-              Route::get('/', [$class, $mode]);
-              Route::post('/', [$class, $mode . 'Act']);
-          });
-          Route::put('/', [$class, 'editAct']);
-          Route::delete('/', [$class, 'deleteAct']);
-      });
-  });
+              Route::get('/', [$class, $mode], $args);
+              Route::post('/', [$class, $mode . 'Act'], $args);
+          }, $args);
+          Route::put('/', [$class, 'editAct'], $args);
+          Route::delete('/', [$class, 'deleteAct'], $args);
+      }, $args);
+  }, $args);
   ```
 - **legacy**: 요청에 따라 모드별로 연결하는 컨트롤러를 나누는 것만 다르고 나머지는 **`resource`** 동일합니다.
   ```php
@@ -112,3 +130,12 @@ Nova 프레임워크에서 라우팅은 클라이언트 요청을 애플리케�
   매칭해주는 요청은 **`resource`** 와 동일합니다.
 
 - **autoLegacy**: 요청에 따라 모드별로 연결하는 컨트롤러를 나누는 것만 다르고 나머지는 **`auto`**와 동일합니다.
+
+
+## 별칭(alias)
+
+URL이 서로 다르지만 동일한 컨트롤러를 호출하는 경우 사용합니다.
+
+  ```php
+  Route::get(['/', '/main', '/main/index'], [MainController::class, 'index']);
+  ```

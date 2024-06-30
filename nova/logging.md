@@ -21,7 +21,7 @@ tmp/log/종류/YYYYMM/prefix_YYYYMMDD_HH_일련번호.log
 ## 로그 기록
 
 ```php
-use Nova\Log;
+use App\Nova\Log;
 
 Log::error('에러 로그입니다.');
 Log::debug('디버깅 로그입니다.');

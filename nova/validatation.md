@@ -7,7 +7,7 @@
     <?php
     namespace App\Requests;
     
-    use Nova\Http\FormRequest;
+    use App\Nova\Http\FormRequest;
     
     class PostRequest extends FormRequest
     {

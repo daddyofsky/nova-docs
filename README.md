@@ -30,3 +30,4 @@ Nova 프레임워크는 라라벨을 참고하여 개발된 PHP 프레임워크�
   - [로그](nova/logging.md)
 - 고급 사항
   - [DB 마이그레이션](nova/migration.md)
+  - [커스터마이징](nova/customizing.md)

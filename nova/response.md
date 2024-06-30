@@ -8,7 +8,7 @@
 가장 간단한 형태의 응답은 문자열을 반환하는 것입니다.
 
 ```php
-use Nova\Http\Response;
+use App\Nova\Http\Response;
 
 public function index()
 {
@@ -22,7 +22,7 @@ public function index()
 
 ```php
 use App\Models\Post;
-use Nova\Http\Response;
+use App\Nova\Http\Response;
 
 public function index()
 {

@@ -8,7 +8,7 @@
 ```php
 namespace App\Middleware;
 
-use Nova\Http\Request;
+use App\Nova\Http\Request;
 
 class AdminOnly
 {

@@ -11,8 +11,8 @@ use App\Controllers\Controller;
 use App\Models\Board;
 use App\Models\BoardSetup;
 use App\Requests\Board\ViewRequest;
-use Nova\Http\Redirect;
-use Nova\Http\Request;
+use App\Nova\Http\Redirect;
+use App\Nova\Http\Request;
 
 class BoardController extends Controller
 {
@@ -86,7 +86,7 @@ php console make:controller front/post
 - **`request`**: 이름이 `$request` 이거나 타입이 `Request` 또는 `FormRequest`를 상속받은 경우
 
   ```php
-  use Nova\Request;
+  use App\Nova\Request;
   ...
   
   public function index(Request $request)

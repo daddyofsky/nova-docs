@@ -17,7 +17,7 @@ php console make:model front/post
    ```php
    namespace App\Models;
    
-   use Nova\Model;
+   use App\Nova\Model;
    
    class Post extends Model
    {
