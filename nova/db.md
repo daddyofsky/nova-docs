@@ -188,13 +188,21 @@ $db->orWhere(
 <a id="where_lifecycle"></a>
 ### 조건의 Lifecycle
 
-- `where()` 메소드로 추가한 조건은 `init()` 또는 `table()` 메소드가 호출되기 전까지 유효하다.  
-- `where()` 이외에 `find()` `findAll()` 등 다른 메소드에 직접 인수로 전달한 조건은 해당 메소드 호출이 끝나면 사라진다.
-- `DB::factory()` 호출한 경우 기본적으로 `init()` 메소드가 호출된다.
+- 기본적으로 `where()` 메소드로 추가한 조건은 쿼리가 실행되면 사라진다.
+- `noInit()` 메소드를 사용한 경우에 한하여 `init()` 또는 `table()` 메소드가 호출되기 전까지 유지된다.  
+- `noInit()` 메소드를 사용한 경우에도 `where()` 이외에 `find()` `findAll()` 등 다른 메소드에 직접 인수로 전달한 조건은 해당 메소드 호출이 끝나면 사라진다.
 - `예외사항` _**`updateCount()` `update()` `delete()` 메소드에 한하여 <u>직접 전달한 조건이 있는 경우</u> where() 메소드로 추가한 조건은 무시한다.**_
+- `주의사항` `noInit()` 사용한 경우 처리 완료 후 `init()` 메소드를 호출하는 것을 잊지 않도록 한다.
 
 ```php
-// 조건의 Lifecycle
+// 기본적으로 조건은 쿼리 실행 후 사라진다.
+$db->where('code', 'notice');
+$count1 = $db->findCount(['cate_code', '01']); // - -> code = 'notice' AND cate_code = '01'
+$count2 = $db->findCount(['cate_code', '02']); // - -> cate_code = '02'
+
+// 조건 유지 시작
+$db->noInit();
+
 $db->where('code', 'notice');
 $count1 = $db->findCount(['cate_code', '01']); // - -> code = 'notice' AND cate_code = '01'
 $count2 = $db->findCount(['cate_code', '02']); // - -> code = 'notice' AND cate_code = '02'
